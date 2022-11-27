@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:async';
+
+import 'package:porcupine_flutter/porcupine.dart';
+import 'package:porcupine_flutter/porcupine_manager.dart';
+import 'package:porcupine_flutter/porcupine_error.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -9,17 +14,56 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  bool isListening = false;
+  bool _isListening = false;
+  bool _isInitializing = true;
+  PorcupineManager? _porcupineManager;
+  String? _porcupineAccessKey;
 
   String getSuggestion() =>
-      (!isListening) ? "Press the button" : "Say \"Android ascend\"";
+      (!_isListening) ? "Press the button" : "Say \"Android ascend\"";
+
+  @override
+  void initState() {
+    super.initState();
+    dotenv.load().then((_) async {
+      _porcupineAccessKey = dotenv.env['PORCUPINE_ACCESS_KEY'];
+      try {
+        _porcupineManager = await PorcupineManager.fromBuiltInKeywords(
+            _porcupineAccessKey!,
+            [BuiltInKeyword.PORCUPINE, BuiltInKeyword.BUMBLEBEE],
+            _wakeWordCallback);
+      } on PorcupineException catch (err) {
+        // handle porcupine init error
+      }
+    }).then((_) =>
+        setState(() => {
+        _isInitializing = false,
+        })
+    );
+  }
+
+  void createPorcupineManager() async {
+    if (_porcupineAccessKey == null) {
+      return;
+    }
+  }
+
+  void _wakeWordCallback(int keywordIndex) {
+    if (keywordIndex == 0) {
+      // porcupine detected
+    }
+    else if (keywordIndex == 1) {
+      // bumblebee detected
+    }
+  }
 
   void detectWakeWord() {
     setState(() {
-      isListening = true;
+      _isListening = true;
     });
-    Future.delayed(const Duration(seconds: 3)).then((value) => setState(() {
-          isListening = false;
+    Future.delayed(const Duration(seconds: 3)).then((value) =>
+        setState(() {
+          _isListening = false;
         }));
   }
 
