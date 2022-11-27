@@ -39,6 +39,7 @@ dependencies:
   picovoice_flutter: ^2.1.6
   porcupine_flutter: ^2.1.6
   flutter_dotenv: ^5.0.2
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:
