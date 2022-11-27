@@ -26,7 +26,8 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     dotenv.load().then((_) async {
-      _porcupineAccessKey = dotenv.env['PORCUPINE_ACCESS_KEY'];
+      _porcupineAccessKey = dotenv.maybeGet('PORCUPINE_ACCESS_KEY');
+      if (_porcupineAccessKey == null) return;
       try {
         _porcupineManager = await PorcupineManager.fromBuiltInKeywords(
             _porcupineAccessKey!,
