@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
 
 import 'package:porcupine_flutter/porcupine_manager.dart';
@@ -33,6 +34,21 @@ class _HomeViewState extends State<HomeView> {
         }));
   }
 
+  @override
+  void dispose() {
+    _porcupineManager?.delete().whenComplete(() => {
+      super.dispose()
+    });
+  }
+
+  Future<bool> requestRecordingPermissions() async {
+    if (await Permission.microphone.isGranted == false) {
+      showMessage("Button won't work without this permission being granted.");
+      return false;
+    }
+    return true;
+  }
+
   Future<void> initPorcupine(String accessKey) async {
     try {
       _porcupineManager = await PorcupineManager.fromKeywordPaths(
@@ -50,12 +66,14 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _wakeWordCallback(int keywordIndex) {
+    print("KeywordIndex: $keywordIndex");
     if (keywordIndex == 0) {
-      showMessage("android ascend detected");
+      showMessage("Wake word detected");
     }
   }
 
   Future<void> detectWakeWord() async {
+    if (await requestRecordingPermissions() == false) return;
     setState(() {
       _isListening = true;
     });
