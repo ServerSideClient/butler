@@ -26,9 +26,10 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     dotenv.load(fileName: 'assets/.env').then((_) async {
       String? porcupineAccessKey = dotenv.maybeGet('PORCUPINE_ACCESS_KEY');
-      if (porcupineAccessKey != null) {
-        await initPorcupine(porcupineAccessKey);
-      }
+      if (porcupineAccessKey == null) throw Exception('Access key missing in env file.');
+      await initPorcupine(porcupineAccessKey);
+    }).onError((error, stackTrace) {
+      showMessage('Error occurred reading api key: $error');
     }).then((_) => setState(() => {
           _isInitializing = false,
         }));
