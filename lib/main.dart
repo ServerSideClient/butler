@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.yellow,
       ),
-      home: const DefaultLayout(title: "Home", body: HomeView()),
+      home: const DefaultLayout(title: "Mobile Assistant", body: HomeView()),
     );
   }
 }
