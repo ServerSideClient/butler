@@ -24,6 +24,7 @@ class WakeWordService extends Service {
           _accessKey,
           ["assets/porcupine/android-awaken_en_android_v2_2_0.ppn"],
           _wakeWordCallback);
+      if ((await requestRecordingPermissions()) == false) return;
     } on PorcupineException catch (e) {
       doOnError(e.message ?? e.toString());
     }
