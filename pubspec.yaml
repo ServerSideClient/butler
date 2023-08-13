@@ -41,6 +41,8 @@ dependencies:
   flutter_dotenv: ^5.1.0
   permission_handler: ^10.4.3
   rhino_flutter: ^2.2.2
+  alarm: ^1.2.1
+  flutter_system_ringtones: ^0.0.6
 
 dev_dependencies:
   flutter_test:
