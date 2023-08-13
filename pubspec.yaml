@@ -43,6 +43,7 @@ dependencies:
   rhino_flutter: ^2.2.2
   alarm: ^1.2.1
   flutter_system_ringtones: ^0.0.6
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
