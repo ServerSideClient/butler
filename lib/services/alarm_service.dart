@@ -39,7 +39,10 @@ class AlarmService extends IntentService {
     } on StateError {
       // no duplicate found
     }
-    int maxId = alarms.map((e) => e.id).reduce((e, max) => (e > max) ? e : max);
+    int maxId = -1;
+    if (alarms.isNotEmpty) {
+      maxId = alarms.map((e) => e.id).reduce((e, max) => (e > max) ? e : max);
+    }
     var ringtone = ((await FlutterSystemRingtones.getAlarmSounds())
         .firstOrNull) ??
         ((await FlutterSystemRingtones.getRingtoneSounds()).firstOrNull) ??
