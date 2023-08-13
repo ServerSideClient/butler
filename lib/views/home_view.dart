@@ -53,6 +53,8 @@ class _HomeViewState extends State<HomeView> {
       _intentService.accessKey = voiceAccessKey;
       await _wakeWordService.init();
       await _intentService.init();
+      await _alarmService.init();
+      await _weatherService.init();
       return true;
     } else {
       showInfo("Access key for Porcupine/Rhino is missing");
@@ -81,13 +83,17 @@ class _HomeViewState extends State<HomeView> {
 
   Future<void> _processIntent(
       InferenceIntent intent, Map<String, String>? slots) async {
-    switch (intent) {
-      case InferenceIntent.alarm:
-        await _alarmService.process(slots);
-        break;
-      case InferenceIntent.weather:
-        await _weatherService.process(slots);
-        break;
+    try {
+      switch (intent) {
+        case InferenceIntent.alarm:
+          await _alarmService.process(slots);
+          break;
+        case InferenceIntent.weather:
+          await _weatherService.process(slots);
+          break;
+      }
+    } on Exception catch (e) {
+      showError(e.toString());
     }
   }
 
