@@ -53,11 +53,14 @@ class AlarmService extends IntentService {
           alarmSettings: AlarmSettings(
               id: ++maxId,
               dateTime: dateTime,
-              assetAudioPath: ringtone.uri)) == false) {
-        doOnInfo("Failed: Unknown error occurred by setting an alarm.");
+              assetAudioPath: ringtone.uri))) {
+        doOnInfo("Alarm set for ${day.toString()} at $hour.");
+      }
+      else {
+        doOnError("Failed: Unknown error occurred by setting an alarm.");
       }
     } on AlarmException catch (e) {
-      doOnInfo("Failed: ${e.message}");
+      doOnError("Failed: ${e.message}");
     }
   }
 
