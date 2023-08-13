@@ -65,11 +65,12 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void showError(String message) {
-    MaterialBanner banner =
-        MaterialBanner(content: Text(message), actions: const [
+    MaterialBanner banner = MaterialBanner(content: Text(message), actions: [
       TextButton(
-        onPressed: null,
-        child: Text('DISMISS'),
+        onPressed: () {
+          if (context.mounted) Navigator.of(context).pop();
+        },
+        child: const Text('DISMISS'),
       )
     ]);
     if (context.mounted) {
