@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <!-- For apps with targetSDK=31 (Android 12) -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <!-- For porcupine / rhino (voice / intent recognition) & weather -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="Butler"
         android:name="${applicationName}"
