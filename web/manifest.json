@@ -1,6 +1,6 @@
 {
-    "name": "mobile_assistant",
-    "short_name": "mobile_assistant",
+    "name": "Butler",
+    "short_name": "butler",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

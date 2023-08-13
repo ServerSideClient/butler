@@ -1,4 +1,4 @@
-import 'package:mobile_assistant/services/service.dart';
+import 'package:butler/services/service.dart';
 
 import '../models/slots.dart';
 

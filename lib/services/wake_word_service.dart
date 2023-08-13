@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:mobile_assistant/services/service.dart';
+import 'package:butler/services/service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:porcupine_flutter/porcupine_error.dart';
 import 'package:porcupine_flutter/porcupine_manager.dart';

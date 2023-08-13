@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile_assistant/models/inference_intent.dart';
-import 'package:mobile_assistant/services/intent_listener_service.dart';
-import 'package:mobile_assistant/services/weather_service.dart';
+import 'package:butler/models/inference_intent.dart';
+import 'package:butler/services/intent_listener_service.dart';
+import 'package:butler/services/weather_service.dart';
 import 'dart:async';
 
 import '../services/alarm_service.dart';

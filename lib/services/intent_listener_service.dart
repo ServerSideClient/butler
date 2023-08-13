@@ -1,4 +1,4 @@
-import 'package:mobile_assistant/services/service.dart';
+import 'package:butler/services/service.dart';
 import 'package:rhino_flutter/rhino.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 import 'package:rhino_flutter/rhino_manager.dart';

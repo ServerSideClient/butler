@@ -1,12 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mobile_assistant">
+    package="ch.ben_kelly.butler">
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <!-- For apps with targetSDK=31 (Android 12) -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <application
-        android:label="Mobile Assistant"
+        android:label="Butler"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
        <activity

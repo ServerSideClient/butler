@@ -1,7 +1,7 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter_system_ringtones/flutter_system_ringtones.dart';
-import 'package:mobile_assistant/models/slots.dart';
-import 'package:mobile_assistant/services/service.dart';
+import 'package:butler/models/slots.dart';
+import 'package:butler/services/service.dart';
 
 class AlarmService extends IntentService {
   @override

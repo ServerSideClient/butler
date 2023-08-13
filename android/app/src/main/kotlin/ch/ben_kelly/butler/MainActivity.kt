@@ -1,4 +1,4 @@
-package com.example.mobile_assistant
+package ch.ben_kelly.butler
 
 import io.flutter.embedding.android.FlutterActivity
 
