@@ -41,6 +41,7 @@ class _HomeViewState extends State<HomeView> {
     await _alarmService.dispose();
     await _wakeWordService.dispose();
     await _intentService.dispose();
+    await _weatherService.dispose();
     super.dispose();
   }
 
