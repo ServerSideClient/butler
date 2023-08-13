@@ -56,8 +56,9 @@ class WakeWordService extends Service {
       try {
         await _porcupineManager!.start();
         isListening.value = true;
-        Future.delayed(const Duration(seconds: 3)).then((value) =>
-        {_porcupineManager!.stop().then((_) => isListening.value = false)});
+        await Future.delayed(const Duration(seconds: 5));
+        await _porcupineManager!.stop();
+        isListening.value = false;
       } on PorcupineException catch (e) {
         doOnError(e.message ?? e.toString());
       }
