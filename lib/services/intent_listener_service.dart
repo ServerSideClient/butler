@@ -32,10 +32,10 @@ class IntentListenerService extends Service {
   void _intentCallback(RhinoInference inference) {
     if (inference.isUnderstood ?? false) {
       if (inference.intent != null && _isProcessing == false) {
-        _isProcessing = true;
         var intent = InferenceIntent.fromString(inference.intent!);
         if (intent != null) {
-          onIntent(intent, inference.slots);
+          _isProcessing = true;
+          onIntent(intent, inference.slots).whenComplete(() => _isProcessing = false);
         }
         else {
           doOnError("Intent ${inference.intent!} is not yet supported.");
