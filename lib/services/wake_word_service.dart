@@ -23,7 +23,7 @@ class WakeWordService extends Service {
       _porcupineManager = await PorcupineManager.fromKeywordPaths(
           _accessKey,
           ["assets/porcupine/android-awaken_en_android_v2_2_0.ppn"],
-          _wakeWordCallback);
+          _wakeWordCallback, errorCallback: _showPorcupineError);
       if ((await requestRecordingPermissions()) == false) return;
     } on PorcupineException catch (e) {
       doOnError(e.message ?? e.toString());
@@ -34,6 +34,8 @@ class WakeWordService extends Service {
   Future<void> dispose() async {
     await _porcupineManager?.delete();
   }
+
+  void _showPorcupineError(PorcupineException e) => doOnError(e.message ?? e.toString());
 
   Future<bool> requestRecordingPermissions() async {
     if (await Permission.microphone.request().isGranted == false) {
