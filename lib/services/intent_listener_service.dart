@@ -23,7 +23,8 @@ class IntentListenerService extends Service {
       _rhinoManager = await RhinoManager.create(
           _accessKey,
           "assets/rhino/mobile-assistant-v1_en_android_v2_2_0.rhn",
-          _intentCallback);
+          _intentCallback,
+      endpointDurationSec: 2);
     } on RhinoException catch (e) {
       doOnError(e.message ?? e.toString());
     }
