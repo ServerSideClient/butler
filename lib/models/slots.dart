@@ -13,4 +13,8 @@ enum Day {
       return null;
     }
   }
+
+  static String get asOptions {
+    return values.map((e) => e.name).join(" | ");
+  }
 }
