@@ -1,3 +1,4 @@
+import 'package:butler/views/dropdowns/top_bar_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:butler/views/home_view.dart';
 import 'package:butler/layouts/default_layout.dart';
@@ -16,7 +17,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.yellow,
       ),
-      home: const DefaultLayout(title: "Butler", body: HomeView()),
+      home: const DefaultLayout(title: "Butler",
+          topBarActions: [TopBarDropdown()],
+          children: [HomeView()]),
     );
   }
 }
