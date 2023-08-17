@@ -1,11 +1,12 @@
 import 'package:butler/services/service.dart';
+import 'package:butler/utils/logging.dart';
 import 'package:rhino_flutter/rhino.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 import 'package:rhino_flutter/rhino_manager.dart';
 
 import '../models/inference_intent.dart';
 
-class IntentListenerService extends Service {
+class IntentListenerService extends Service with Logging {
 
   final Future<void> Function(InferenceIntent intent, Map<String, String>? slots) onIntent;
   IntentListenerService({required this.onIntent});
@@ -25,7 +26,14 @@ class IntentListenerService extends Service {
           "assets/rhino/mobile-assistant-v1_en_android_v2_2_0.rhn",
           _intentCallback,
       endpointDurationSec: 2);
+      logger.info("Initialized Rhino");
     } on RhinoException catch (e) {
+      if (e.message != null) {
+        logger.severe("Failed to initialize Rhino: ${e.message}", e);
+      }
+      else {
+        logger.severe("Failed to initialize Rhino", e);
+      }
       doOnError(e.message ?? e.toString());
     }
   }

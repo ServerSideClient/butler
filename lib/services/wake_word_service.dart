@@ -1,10 +1,11 @@
+import 'package:butler/utils/logging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:butler/services/service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:porcupine_flutter/porcupine_error.dart';
 import 'package:porcupine_flutter/porcupine_manager.dart';
 
-class WakeWordService extends Service {
+class WakeWordService extends Service with Logging {
 
   final Future<void> Function() onWordDetected;
 
@@ -24,8 +25,15 @@ class WakeWordService extends Service {
           _accessKey,
           ["assets/porcupine/android-awaken_en_android_v2_2_0.ppn"],
           _wakeWordCallback, errorCallback: _showPorcupineError);
+      logger.info("Initialized Porcupine");
       if ((await requestRecordingPermissions()) == false) return;
     } on PorcupineException catch (e) {
+      if (e.message != null) {
+        logger.severe("Failed to initialize Porcupine: ${e.message}", e);
+      }
+      else {
+        logger.severe("Failed to initialize Rhino", e);
+      }
       doOnError(e.message ?? e.toString());
     }
   }
@@ -39,9 +47,11 @@ class WakeWordService extends Service {
 
   Future<bool> requestRecordingPermissions() async {
     if (await Permission.microphone.request().isGranted == false) {
+      logger.warning("Request for recording permission denied.");
       doOnError("Button won't work without this permission being granted.");
       return false;
     }
+    logger.info("Request for recording permission granted.");
     return true;
   }
 
