@@ -1,3 +1,4 @@
+import 'package:butler/views/dropdowns/top_bar_dropdown.dart';
 import 'dart:io';
 
 import 'package:butler/utils/logging.dart';
@@ -38,7 +39,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.yellow,
       ),
-      home: const DefaultLayout(title: "Butler", body: HomeView()),
+      home: const DefaultLayout(title: "Butler",
+          topBarActions: [TopBarDropdown()],
+          children: [HomeView()]),
     );
   }
 }

@@ -112,8 +112,10 @@ class _HomeViewState extends State<HomeView> {
           return (errorFree)
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
+                      alignment: Alignment.center,
                       margin: const EdgeInsets.symmetric(vertical: 10.0),
                       child: CircleAvatar(
                         backgroundColor: Colors.blue,
