@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:butler/utils/logging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -14,6 +15,7 @@ class StorageHelper with Logging {
 
   Future<void> init() async {
     _logsDir = Directory(join((await getApplicationDocumentsDirectory()).path, "logs"));
+    await _logsDir!.create();
   }
 
   void _throwNotInitialisedIfNull(Object? value) {
@@ -26,4 +28,9 @@ class StorageHelper with Logging {
     _throwNotInitialisedIfNull(_logsDir);
     return _logsDir!;
   }
+}
+
+mixin StorageAccess {
+  @protected
+  StorageHelper get storage => StorageHelper.getInstance();
 }
