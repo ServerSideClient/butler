@@ -11,13 +11,13 @@ class DefaultLayout extends StatelessWidget {
 
   const DefaultLayout(
       {Key? key,
-        required this.title,
-        required this.children,
-        this.centered = true,
-        this.topPadding = 16.0,
-        this.horizontalPadding = 0.0,
-        this.topBarActions,
-        this.floatingActionButton})
+      required this.title,
+      required this.children,
+      this.centered = true,
+      this.topPadding = 0.0,
+      this.horizontalPadding = 0.0,
+      this.topBarActions,
+      this.floatingActionButton})
       : super(key: key);
 
   @override
@@ -27,9 +27,12 @@ class DefaultLayout extends StatelessWidget {
         title: Text(title),
         actions: topBarActions,
       ),
-      body: SingleChildScrollView(
-        child: buildChild(),
-      ),
+      body: (centered)
+          ? Center(
+              child: SingleChildScrollView(
+              child: buildChild(),
+            ))
+          : SingleChildScrollView(child: buildChild()),
       floatingActionButton: floatingActionButton,
     );
   }
@@ -45,9 +48,6 @@ class DefaultLayout extends StatelessWidget {
               left: horizontalPadding,
               right: horizontalPadding),
           child: child);
-    }
-    if (centered) {
-      child = Align(alignment: Alignment.center,child: child, );
     }
     return child;
   }
