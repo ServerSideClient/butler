@@ -42,7 +42,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.yellow,
       ),
-      home: const DefaultLayout(title: "Butler",
+      home: const DefaultLayout(
+          title: "Butler",
           topBarActions: [TopBarDropdown()],
           children: [HomeView()]),
     );

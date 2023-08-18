@@ -1,10 +1,11 @@
+import 'package:butler/utils/logging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:butler/services/service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:porcupine_flutter/porcupine_error.dart';
 import 'package:porcupine_flutter/porcupine_manager.dart';
 
-class WakeWordService extends Service {
+class WakeWordService extends Service with Logging {
 
   final Future<void> Function() onWordDetected;
 
@@ -24,8 +25,15 @@ class WakeWordService extends Service {
           _accessKey,
           ["assets/porcupine/android-awaken_en_android_v2_2_0.ppn"],
           _wakeWordCallback, errorCallback: _showPorcupineError);
+      logger.info("Initialized Porcupine");
       if ((await requestRecordingPermissions()) == false) return;
     } on PorcupineException catch (e) {
+      if (e.message != null) {
+        logger.severe("Failed to initialize Porcupine: ${e.message}", e);
+      }
+      else {
+        logger.severe("Failed to initialize Porcupine", e);
+      }
       doOnError(e.message ?? e.toString());
     }
   }
@@ -39,17 +47,17 @@ class WakeWordService extends Service {
 
   Future<bool> requestRecordingPermissions() async {
     if (await Permission.microphone.request().isGranted == false) {
+      logger.warning("Request for recording permission denied.");
       doOnError("Button won't work without this permission being granted.");
       return false;
     }
+    logger.info("Request for recording permission granted.");
     return true;
   }
 
   void _wakeWordCallback(int keywordIndex) {
-    debugPrint("KeywordIndex: $keywordIndex");
-    if (keywordIndex == 0) {
-      doOnInfo("Wake word detected");
-    }
+    logger.info("Wake word detected");
+    doOnInfo("Wake word detected");
     onWordDetected();
   }
 
@@ -57,13 +65,21 @@ class WakeWordService extends Service {
     if (await requestRecordingPermissions() == false) return;
     if (_porcupineManager != null) {
       try {
+        logger.info("Porcupine listening...");
         await _porcupineManager!.start();
         isListening.value = true;
         await Future.delayed(const Duration(seconds: 5));
         await _porcupineManager!.stop();
-        isListening.value = false;
       } on PorcupineException catch (e) {
+        if (e.message != null) {
+          logger.severe("Porcupine failed while listening: ${e.message}", e);
+        }
+        else {
+          logger.severe("Porcupine failed while listening", e);
+        }
         doOnError(e.message ?? e.toString());
+      } finally {
+        isListening.value = false;
       }
     }
     else {

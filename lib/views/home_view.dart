@@ -71,7 +71,10 @@ class _HomeViewState extends State<HomeView> {
     MaterialBanner banner = MaterialBanner(content: Text(message), actions: [
       TextButton(
         onPressed: () {
-          if (context.mounted) Navigator.of(context).pop();
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).hideCurrentMaterialBanner(
+                reason: MaterialBannerClosedReason.dismiss);
+          }
         },
         child: const Text('DISMISS'),
       )
