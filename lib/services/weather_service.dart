@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:butler/models/weather_forecast.dart';
 import 'package:butler/services/service.dart';
-import 'package:flutter/foundation.dart';
+import 'package:butler/utils/logging.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/slots.dart';
 
-class WeatherService extends IntentService {
+class WeatherService extends IntentService with Logging {
 
   Uri _generateWeatherUrl(DateTime startDate, DateTime endDate) {
     String startString = "${startDate.year.toString().padLeft(4, "0")}-${startDate.month.toString().padLeft(2, "0")}-${startDate.day.toString().padLeft(2, "0")}";
@@ -22,7 +22,7 @@ class WeatherService extends IntentService {
       "start_date": startString,
       "end_date": endString
     });
-    debugPrint(uri.toString());
+    logger.info("Calling $uri");
     return uri;
   }
 
@@ -55,6 +55,7 @@ class WeatherService extends IntentService {
   }
 
   Future<WeatherForecast?> _parseForecast(http.Response response) async {
+    logger.fine("Parsing forecast response");
     if (response.statusCode == 200) {
       return WeatherForecast.fromJson(jsonDecode(response.body));
     }
@@ -68,6 +69,7 @@ class WeatherService extends IntentService {
       } on Exception {
         //
       }
+      logger.warning("HTTP Response = ${response.statusCode} $errorCause");
       doOnError("Failed: HTTP Response = ${response.statusCode} $errorCause");
       return null;
     }
