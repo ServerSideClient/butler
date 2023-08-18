@@ -1,3 +1,4 @@
+import 'package:butler/utils/shared_preferences_helper.dart';
 import 'package:butler/views/dropdowns/top_bar_dropdown.dart';
 import 'dart:io';
 
@@ -13,6 +14,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   hierarchicalLoggingEnabled = true;
   PrintAppender(formatter: const ColorFormatter()).attachToLogger(Logger.root);
+  var sharedPrefs = SharedPreferencesHelper.getInstance();
+  await sharedPrefs.init();
   StorageHelper storage = StorageHelper.getInstance();
   try {
     await storage.init();
