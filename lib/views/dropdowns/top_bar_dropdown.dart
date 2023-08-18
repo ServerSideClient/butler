@@ -4,6 +4,7 @@ import 'package:butler/utils/logging.dart';
 import 'package:butler/utils/storage_helper.dart';
 import 'package:butler/views/dialogs/logs_list_dialog.dart';
 import 'package:butler/views/dialogs/phrase_list_dialog.dart';
+import 'package:butler/views/settings_view.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
@@ -11,7 +12,8 @@ import 'package:path_provider/path_provider.dart';
 
 enum TopBarDropdownItem {
   phrasePossibilities("Possible phrases"),
-  showLogs("Logs");
+  showLogs("Logs"),
+  openSettings("Settings");
 
   final String label;
 
@@ -33,8 +35,13 @@ class TopBarDropdown extends StatelessWidget with StorageAccess, Logging {
           case TopBarDropdownItem.phrasePossibilities:
             await showDialog(
                 context: context, builder: (_) => const PhraseListDialog());
+            break;
           case TopBarDropdownItem.showLogs:
             await _callLogs(context);
+            break;
+          case TopBarDropdownItem.openSettings:
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const SettingsView()));
         }
       },
     );
