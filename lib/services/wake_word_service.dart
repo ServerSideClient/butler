@@ -32,7 +32,7 @@ class WakeWordService extends Service with Logging {
         logger.severe("Failed to initialize Porcupine: ${e.message}", e);
       }
       else {
-        logger.severe("Failed to initialize Rhino", e);
+        logger.severe("Failed to initialize Porcupine", e);
       }
       doOnError(e.message ?? e.toString());
     }
@@ -56,10 +56,8 @@ class WakeWordService extends Service with Logging {
   }
 
   void _wakeWordCallback(int keywordIndex) {
-    debugPrint("KeywordIndex: $keywordIndex");
-    if (keywordIndex == 0) {
-      doOnInfo("Wake word detected");
-    }
+    logger.info("Wake word detected");
+    doOnInfo("Wake word detected");
     onWordDetected();
   }
 
@@ -67,13 +65,21 @@ class WakeWordService extends Service with Logging {
     if (await requestRecordingPermissions() == false) return;
     if (_porcupineManager != null) {
       try {
+        logger.info("Porcupine listening...");
         await _porcupineManager!.start();
         isListening.value = true;
         await Future.delayed(const Duration(seconds: 5));
         await _porcupineManager!.stop();
-        isListening.value = false;
       } on PorcupineException catch (e) {
+        if (e.message != null) {
+          logger.severe("Porcupine failed while listening: ${e.message}", e);
+        }
+        else {
+          logger.severe("Porcupine failed while listening", e);
+        }
         doOnError(e.message ?? e.toString());
+      } finally {
+        isListening.value = false;
       }
     }
     else {

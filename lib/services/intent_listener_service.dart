@@ -25,7 +25,8 @@ class IntentListenerService extends Service with Logging {
           _accessKey,
           "assets/rhino/mobile-assistant-v1_en_android_v2_2_0.rhn",
           _intentCallback,
-      endpointDurationSec: 2);
+      endpointDurationSec: 2,
+      processErrorCallback: _showRhinoError);
       logger.info("Initialized Rhino");
     } on RhinoException catch (e) {
       if (e.message != null) {
@@ -38,22 +39,26 @@ class IntentListenerService extends Service with Logging {
     }
   }
 
+  void _showRhinoError(RhinoException e) => doOnError(e.message ?? e.toString());
+
   void _intentCallback(RhinoInference inference) {
     if (inference.isUnderstood ?? false) {
       if (inference.intent != null && _isProcessing == false) {
         var intent = InferenceIntent.fromString(inference.intent!);
         if (intent != null) {
           _isProcessing = true;
+          var slots = (inference.slots ?? <String, String>{})
+              .entries
+              .map((e) => "Slot = ${e.key}\tValue = ${e.value}")
+              .join("\n");
+          doOnInfo(slots);
+          logger.fine("Intent ${inference.intent} received:\n$slots");
           onIntent(intent, inference.slots).whenComplete(() => _isProcessing = false);
         }
         else {
           doOnError("Intent ${inference.intent!} is not yet supported.");
         }
       }
-      doOnInfo((inference.slots ?? <String, String>{})
-          .entries
-          .map((e) => "Slot ${e.key}\tValue ${e.value}")
-          .toString());
     } else {
       doOnError("Command not understood");
     }
@@ -62,8 +67,15 @@ class IntentListenerService extends Service with Logging {
   Future<void> listen() async {
     if (_rhinoManager != null) {
       try {
+        logger.info("Rhino listening...");
         await _rhinoManager!.process();
       } on RhinoException catch (e) {
+        if (e.message != null) {
+          logger.severe("Rhino failed while listening: ${e.message}", e);
+        }
+        else {
+          logger.severe("Rhino failed while listening", e);
+        }
         doOnError(e.message ?? e.toString());
       }
     }
