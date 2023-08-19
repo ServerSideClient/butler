@@ -3,18 +3,19 @@ import 'dart:convert';
 import 'package:butler/models/weather_forecast.dart';
 import 'package:butler/services/service.dart';
 import 'package:butler/utils/logging.dart';
+import 'package:butler/utils/shared_preferences_helper.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/slots.dart';
 
-class WeatherService extends IntentService with Logging {
+class WeatherService extends IntentService with Logging, SharedPreferencesAccess {
 
   Uri _generateWeatherUrl(DateTime startDate, DateTime endDate) {
     String startString = "${startDate.year.toString().padLeft(4, "0")}-${startDate.month.toString().padLeft(2, "0")}-${startDate.day.toString().padLeft(2, "0")}";
     String endString = "${endDate.year.toString().padLeft(4, '0')}-${endDate.month.toString().padLeft(2, "0")}-${endDate.day.toString().padLeft(2, "0")}";
     Uri uri = Uri.https("api.open-meteo.com", "/v1/forecast", {
-      "latitude": "47.5056",
-      "longitude": "8.7241",
+      "latitude": (prefs.getDouble(SharedPreferencesHelper.keySettingLatitude) ?? 0).toString(),
+      "longitude": (prefs.getDouble(SharedPreferencesHelper.keySettingLongitude) ?? 0).toString(),
       "hourly": "temperature_2m,apparent_temperature,precipitation_probability",
       "daily": "temperature_2m_max,temperature_2m_min,precipitation_probability_max",
       "timeformat": "unixtime",
