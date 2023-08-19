@@ -13,7 +13,7 @@ class DefaultLayout extends StatelessWidget {
       {Key? key,
       required this.title,
       required this.children,
-      this.centered = true,
+      this.centered = false,
       this.topPadding = 0.0,
       this.horizontalPadding = 0.0,
       this.topBarActions,
