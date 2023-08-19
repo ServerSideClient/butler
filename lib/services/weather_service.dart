@@ -8,25 +8,8 @@ import 'package:http/http.dart' as http;
 
 import '../models/slots.dart';
 
-class WeatherService extends IntentService with Logging, SharedPreferencesAccess {
-
-  Uri _generateWeatherUrl(DateTime startDate, DateTime endDate) {
-    String startString = "${startDate.year.toString().padLeft(4, "0")}-${startDate.month.toString().padLeft(2, "0")}-${startDate.day.toString().padLeft(2, "0")}";
-    String endString = "${endDate.year.toString().padLeft(4, '0')}-${endDate.month.toString().padLeft(2, "0")}-${endDate.day.toString().padLeft(2, "0")}";
-    Uri uri = Uri.https("api.open-meteo.com", "/v1/forecast", {
-      "latitude": (prefs.getDouble(SharedPreferencesHelper.keySettingLatitude) ?? 0).toString(),
-      "longitude": (prefs.getDouble(SharedPreferencesHelper.keySettingLongitude) ?? 0).toString(),
-      "hourly": "temperature_2m,apparent_temperature,precipitation_probability",
-      "daily": "temperature_2m_max,temperature_2m_min,precipitation_probability_max",
-      "timeformat": "unixtime",
-      "timezone": "Europe/Berlin",
-      "start_date": startString,
-      "end_date": endString
-    });
-    logger.info("Calling $uri");
-    return uri;
-  }
-
+class WeatherService extends IntentService
+    with Logging, SharedPreferencesAccess {
   @override
   Future<void> init() async {}
 
@@ -55,12 +38,35 @@ class WeatherService extends IntentService with Logging, SharedPreferencesAccess
     }
   }
 
+  String _formatDate(DateTime date) {
+    return "${date.year.toString().padLeft(4, "0")}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}";
+  }
+
+  Uri _generateWeatherUrl(DateTime startDate, DateTime endDate) {
+    Uri uri = Uri.https("api.open-meteo.com", "/v1/forecast", {
+      "latitude":
+          (prefs.getDouble(SharedPreferencesHelper.keySettingLatitude) ?? 0)
+              .toString(),
+      "longitude":
+          (prefs.getDouble(SharedPreferencesHelper.keySettingLongitude) ?? 0)
+              .toString(),
+      "hourly": "temperature_2m,apparent_temperature,precipitation_probability",
+      "daily":
+          "temperature_2m_max,temperature_2m_min,precipitation_probability_max",
+      "timeformat": "unixtime",
+      "timezone": "Europe/Berlin",
+      "start_date": _formatDate(startDate),
+      "end_date": _formatDate(endDate)
+    });
+    logger.info("Calling $uri");
+    return uri;
+  }
+
   Future<WeatherForecast?> _parseForecast(http.Response response) async {
     logger.fine("Parsing forecast response");
     if (response.statusCode == 200) {
       return WeatherForecast.fromJson(jsonDecode(response.body));
-    }
-    else {
+    } else {
       String errorCause = response.reasonPhrase ?? "";
       try {
         var jsonResponse = jsonDecode(response.body);
@@ -75,5 +81,4 @@ class WeatherService extends IntentService with Logging, SharedPreferencesAccess
       return null;
     }
   }
-
 }

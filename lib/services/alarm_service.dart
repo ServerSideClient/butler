@@ -44,7 +44,7 @@ class AlarmService extends IntentService {
       maxId = alarms.map((e) => e.id).reduce((e, max) => (e > max) ? e : max);
     }
     var ringtone = ((await FlutterSystemRingtones.getAlarmSounds())
-        .firstOrNull) ??
+            .firstOrNull) ??
         ((await FlutterSystemRingtones.getRingtoneSounds()).firstOrNull) ??
         ((await FlutterSystemRingtones.getNotificationSounds()).firstOrNull);
     if (ringtone == null) {
@@ -54,17 +54,13 @@ class AlarmService extends IntentService {
     try {
       if (await Alarm.set(
           alarmSettings: AlarmSettings(
-              id: ++maxId,
-              dateTime: dateTime,
-              assetAudioPath: ringtone.uri))) {
+              id: ++maxId, dateTime: dateTime, assetAudioPath: ringtone.uri))) {
         doOnInfo("Alarm set for ${day.toString()} at $hour.");
-      }
-      else {
+      } else {
         doOnError("Failed: Unknown error occurred by setting an alarm.");
       }
     } on AlarmException catch (e) {
       doOnError("Failed: ${e.message}");
     }
   }
-
 }
