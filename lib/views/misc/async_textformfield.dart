@@ -4,20 +4,26 @@ import 'package:flutter/material.dart';
 
 class AsyncTextFormField extends StatefulWidget {
   final Future<bool> Function(String) validator;
-  final Duration validationDebounce;
   final String hintText;
   final String isValidatingMessage;
   final String valueIsEmptyMessage;
   final String valueIsInvalidMessage;
+  final TextEditingController controller;
+  final Duration? validationDebounce;
+  final Key? overrideKey;
+  final Future<void> Function(String value)? onValid;
 
   const AsyncTextFormField(
       {Key? key,
       required this.validator,
-      required this.validationDebounce,
+      required this.controller,
+      this.validationDebounce,
       this.isValidatingMessage = "Validation in progress",
-      this.valueIsEmptyMessage = 'Empty text is not permitted',
-      this.valueIsInvalidMessage = 'Text is not valid',
-      this.hintText = ''})
+      this.valueIsEmptyMessage = "Empty text is not permitted",
+      this.valueIsInvalidMessage = "Text is not valid",
+      this.hintText = "",
+      this.onValid,
+      this.overrideKey})
       : super(key: key);
 
   @override
@@ -34,36 +40,57 @@ class _AsyncTextFormFieldState extends State<AsyncTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      key: widget.overrideKey,
+      autovalidateMode: (widget.validationDebounce != null)
+          ? AutovalidateMode.onUserInteraction
+          : AutovalidateMode.disabled,
       validator: (value) {
         if (isValidating) {
           return widget.isValidatingMessage;
         }
         if (value?.isEmpty ?? false) {
           return widget.valueIsEmptyMessage;
+        } else if (value != null &&
+            !isWaiting &&
+            widget.validationDebounce == null) {
+          isWaiting = true;
+          validate(value).then((valid) {
+            setState(() => isValid = valid);
+            if (isValid && widget.onValid != null) {
+              Future.delayed(const Duration(seconds: 1)).then((_) async {
+                await widget.onValid!(value);
+              });
+            } else {
+              setState(() => isWaiting = false);
+            }
+          });
+          return null;
         }
         if (!isWaiting && !isValid) {
           return widget.valueIsInvalidMessage;
         }
         return null;
       },
+      controller: widget.controller,
       onChanged: (text) async {
-        isDirty = true;
-        if (text.isEmpty) {
-          setState(() {
-            isValid = false;
-          });
+        if (widget.validationDebounce != null) {
+          isDirty = true;
+          if (text.isEmpty) {
+            setState(() {
+              isValid = false;
+            });
+            cancelTimer();
+            return;
+          }
+          isWaiting = true;
           cancelTimer();
-          return;
+          _debounce = Timer(widget.validationDebounce!, () async {
+            isWaiting = false;
+            isValid = await validate(text);
+            setState(() {});
+            isValidating = false;
+          });
         }
-        isWaiting = true;
-        cancelTimer();
-        _debounce = Timer(widget.validationDebounce, () async {
-          isWaiting = false;
-          isValid = await validate(text);
-          setState(() {});
-          isValidating = false;
-        });
       },
       textAlign: TextAlign.start,
       maxLines: 1,
