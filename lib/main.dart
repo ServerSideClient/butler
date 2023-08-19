@@ -40,10 +40,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Butler',
       theme: ThemeData(
-        primarySwatch: Colors.yellow,
+        primarySwatch: Colors.green,
       ),
       home: const DefaultLayout(
           title: "Butler",
+          centered: true,
           topBarActions: [TopBarDropdown()],
           children: [HomeView()]),
     );
