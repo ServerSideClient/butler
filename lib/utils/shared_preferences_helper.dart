@@ -3,6 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper with Logging {
+  static const String _keyPrefsVersion = "prefsVersion";
+  static const String _settingPrefix = "setting";
+  static const String keySettingAddress = "${_settingPrefix}Address";
+  static const String keySettingLongitude = "${_settingPrefix}Longitude";
+  static const String keySettingLatitude = "${_settingPrefix}Latitude";
+
   static final SharedPreferencesHelper _instance = SharedPreferencesHelper._internal();
   SharedPreferencesHelper._internal();
   factory SharedPreferencesHelper.getInstance() => _instance;
@@ -13,6 +19,13 @@ class SharedPreferencesHelper with Logging {
     try {
       _prefs = await SharedPreferences.getInstance();
       logger.fine("Initialized SharedPreferences");
+      int prefsVersion = _prefs!.getInt(_keyPrefsVersion) ?? 0;
+      if (prefsVersion == 0) {
+        await _prefs!.setString(keySettingAddress, "Winterthur, Zurich, Switzerland");
+        await _prefs!.setDouble(keySettingLongitude, 8.7241);
+        await _prefs!.setDouble(keySettingLatitude, 47.5056);
+        await _prefs!.setInt(_keyPrefsVersion, 1);
+      }
     } on Exception catch (e) {
       logger.severe("Failed to initialize SharedPreferences", e);
     }
