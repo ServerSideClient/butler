@@ -1,23 +1,28 @@
 import 'dart:math';
 
 class WeatherForecast {
+  final int entries;
   final List<double> temperatures;
   final List<double> apparentTemperatures;
   final List<double> precipitationProbability;
   final List<double> minTemperatures;
   final List<double> maxTemperatures;
   final List<double> maxPrecipitationProbability;
+  final List<String> timestamps;
 
   const WeatherForecast(
-      {required this.temperatures,
+      {required this.entries,
+      required this.temperatures,
       required this.apparentTemperatures,
       required this.precipitationProbability,
       required this.minTemperatures,
       required this.maxTemperatures,
-      required this.maxPrecipitationProbability});
+      required this.maxPrecipitationProbability,
+      required this.timestamps});
 
   factory WeatherForecast.fromJson(Map<String, dynamic> json) {
     return WeatherForecast(
+        entries: json['hourly']['time'].length,
         temperatures: List<double>.from(
             json['hourly']['temperature_2m'].map((x) => x?.toDouble())),
         apparentTemperatures: List<double>.from(
@@ -31,7 +36,8 @@ class WeatherForecast {
             json['daily']['temperature_2m_max'].map((x) => x?.toDouble())),
         maxPrecipitationProbability: List<double>.from(json['daily']
                 ['precipitation_probability_max']
-            .map((x) => x?.toDouble())));
+            .map((x) => x?.toDouble())),
+        timestamps: List<String>.from(json['hourly']['time']));
   }
 
   @override
@@ -42,4 +48,23 @@ class WeatherForecast {
         "Avg Precipitation: ${(precipitationProbability.reduce((sum, val) => sum + val) / precipitationProbability.length).round()} %\n"
         "Max Precipitation: ${maxPrecipitationProbability.reduce((maximum, val) => max(maximum, val))} %";
   }
+
+  List<WeatherForecastGraphEntry> get graphData {
+    List<WeatherForecastGraphEntry> data = List.empty(growable: true);
+    for (int i = 0; i < entries; i++) {
+      var date = DateTime.parse(timestamps[i]);
+      data.add(WeatherForecastGraphEntry(
+          temperatures[i], precipitationProbability[i], date));
+    }
+    return data;
+  }
+}
+
+class WeatherForecastGraphEntry {
+  final double temperature;
+  final double precipitation;
+  final DateTime time;
+
+  const WeatherForecastGraphEntry(
+      this.temperature, this.precipitation, this.time);
 }
