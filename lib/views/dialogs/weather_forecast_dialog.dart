@@ -15,12 +15,14 @@ class WeatherForecastDialog extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    var graphData = forecast.graphData;
+    final graphData = forecast.graphData;
     final zoomPanBehavior = ZoomPanBehavior(
         // Enables pinch zooming
         enablePinching: true,
         // Enables movement within zoomed graph
         enablePanning: true);
+    const tempColor = Colors.red;
+    const precipitationColor = Colors.blue;
     return AlertDialog(
       title: Text(prefs.getString(SharedPreferencesHelper.keySettingAddress) ??
           "Forecast"),
@@ -29,9 +31,11 @@ class WeatherForecastDialog extends StatelessWidget
         child: Center(
           child: SfCartesianChart(
             zoomPanBehavior: zoomPanBehavior,
-            primaryXAxis: DateTimeAxis(dateFormat: DateFormat(DateFormat.HOUR24)),
+            primaryXAxis:
+                DateTimeAxis(dateFormat: DateFormat(DateFormat.HOUR24)),
             primaryYAxis: NumericAxis(
-                title: AxisTitle(text: "° C"),
+                title: AxisTitle(
+                    text: "° C", textStyle: const TextStyle(color: tempColor)),
                 name: "axisTemperature",
                 minimum: forecast.minTemperatures
                     .reduce((acc, val) => min(acc, val)),
@@ -40,7 +44,9 @@ class WeatherForecastDialog extends StatelessWidget
                 decimalPlaces: 1),
             axes: [
               NumericAxis(
-                  title: AxisTitle(text: "% Rain"),
+                  title: AxisTitle(
+                      text: "% Rain",
+                      textStyle: const TextStyle(color: precipitationColor)),
                   name: "axisPrecipitation",
                   opposedPosition: true,
                   minimum: 0,
