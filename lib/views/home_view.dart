@@ -65,7 +65,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void showInfo(String message) {
-    SnackBar snackBar = SnackBar(content: Text(message), behavior: SnackBarBehavior.floating,);
+    SnackBar snackBar = SnackBar(content: Text(message), behavior: SnackBarBehavior.floating);
     if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
