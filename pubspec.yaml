@@ -51,7 +51,7 @@ dependencies:
   open_file: ^3.3.2
   shared_preferences: ^2.2.0
   geocoding: ^2.1.0
-  syncfusion_flutter_charts: ^22.2.9
+  syncfusion_flutter_charts: ^22.2.10
   intl: ^0.18.1
 
 dev_dependencies:
