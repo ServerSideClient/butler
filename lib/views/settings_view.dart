@@ -1,5 +1,6 @@
 import 'package:butler/layouts/default_layout.dart';
 import 'package:butler/utils/shared_preferences_helper.dart';
+import 'package:butler/views/dialogs/directories_selection_dialog.dart';
 import 'package:butler/views/dialogs/location_setting_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -19,7 +20,12 @@ class SettingsView extends StatelessWidget with SharedPreferencesAccess {
             "Location",
             ElevatedButton(
                 onPressed: () async => await _showLocationChangeDialog(context),
-                child: const Text("Change")))
+                child: const Text("Change"))),
+        _buildSettingsRow(
+            "Ringtones",
+            ElevatedButton(
+                onPressed: () async => await _showRingtoneChangeDialog(context),
+                child: const Text("Assign"))),
       ],
     );
   }
@@ -51,5 +57,21 @@ class SettingsView extends StatelessWidget with SharedPreferencesAccess {
         SharedPreferencesHelper.keySettingLongitude, location.longitude);
     await prefs.setDouble(
         SharedPreferencesHelper.keySettingLatitude, location.latitude);
+  }
+
+  Future<void> _showRingtoneChangeDialog(BuildContext context) async {
+    var dirs = prefs.getStringList(
+            SharedPreferencesHelper.keySettingRingtoneDirectory) ??
+        [];
+    await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => DirectoriesSelectionDialog(
+            initialDirectories: dirs, onSubmit: _setRingtoneDirectories));
+  }
+
+  Future<void> _setRingtoneDirectories(List<String> directories) async {
+    await prefs.setStringList(
+        SharedPreferencesHelper.keySettingRingtoneDirectory, directories);
   }
 }

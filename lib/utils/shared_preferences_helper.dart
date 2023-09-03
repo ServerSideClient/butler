@@ -8,6 +8,7 @@ class SharedPreferencesHelper with Logging {
   static const String keySettingAddress = "${_settingPrefix}Address";
   static const String keySettingLongitude = "${_settingPrefix}Longitude";
   static const String keySettingLatitude = "${_settingPrefix}Latitude";
+  static const String keySettingRingtoneDirectory = "${_settingPrefix}Ringtone";
 
   static final SharedPreferencesHelper _instance = SharedPreferencesHelper._internal();
   SharedPreferencesHelper._internal();
