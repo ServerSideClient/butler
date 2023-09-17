@@ -82,9 +82,7 @@ flutter:
     - assets/.env
     - assets/porcupine/android-awaken_en_android_v2_2_0.ppn
     - assets/rhino/mobile-assistant-v1_en_android_v2_2_0.rhn
-    - assets/ringtones/extreme_alarm_tone.mp3
-    - assets/ringtones/high_volume_ringtone.mp3
-    - assets/ringtones/nokia_alarm_ringtone-clock_1_(2010_version).mp3
+    - assets/ringtones/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
