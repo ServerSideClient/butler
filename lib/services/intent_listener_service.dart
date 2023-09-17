@@ -1,12 +1,14 @@
 import 'package:butler/services/service.dart';
+import 'package:butler/utils/debug.dart';
 import 'package:butler/utils/logging.dart';
+import 'package:butler/utils/shared_preferences_helper.dart';
 import 'package:rhino_flutter/rhino.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 import 'package:rhino_flutter/rhino_manager.dart';
 
 import '../models/inference_intent.dart';
 
-class IntentListenerService extends Service with Logging {
+class IntentListenerService extends Service with Logging, SharedPreferencesAccess, DebugMixin {
 
   final Future<void> Function(InferenceIntent intent, Map<String, String>? slots) onIntent;
   IntentListenerService({required this.onIntent});
@@ -51,7 +53,7 @@ class IntentListenerService extends Service with Logging {
               .entries
               .map((e) => "Slot = ${e.key}\tValue = ${e.value}")
               .join("\n");
-          doOnInfo(slots);
+          if (isInDebug) doOnInfo(slots);
           logger.fine("Intent ${inference.intent} received:\n$slots");
           onIntent(intent, inference.slots).whenComplete(() => _isProcessing = false);
         }

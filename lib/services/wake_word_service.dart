@@ -1,11 +1,13 @@
+import 'package:butler/utils/debug.dart';
 import 'package:butler/utils/logging.dart';
+import 'package:butler/utils/shared_preferences_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:butler/services/service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:porcupine_flutter/porcupine_error.dart';
 import 'package:porcupine_flutter/porcupine_manager.dart';
 
-class WakeWordService extends Service with Logging {
+class WakeWordService extends Service with Logging, SharedPreferencesAccess, DebugMixin {
 
   final Future<void> Function() onWordDetected;
 
@@ -57,7 +59,7 @@ class WakeWordService extends Service with Logging {
 
   void _wakeWordCallback(int keywordIndex) {
     logger.info("Wake word detected");
-    doOnInfo("Wake word detected");
+    if (isInDebug) doOnInfo("Wake word detected");
     onWordDetected();
   }
 

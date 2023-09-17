@@ -19,7 +19,13 @@ class SettingsView extends StatelessWidget with SharedPreferencesAccess {
             "Location",
             ElevatedButton(
                 onPressed: () async => await _showLocationChangeDialog(context),
-                child: const Text("Change")))
+                child: const Text("Change"))),
+        _buildSettingsRow(
+            "Debug",
+            Switch(
+                value: prefs.getBool(SharedPreferencesHelper.keySettingDebug) ??
+                    false,
+                onChanged: _setDebugSetting))
       ],
     );
   }
@@ -51,5 +57,9 @@ class SettingsView extends StatelessWidget with SharedPreferencesAccess {
         SharedPreferencesHelper.keySettingLongitude, location.longitude);
     await prefs.setDouble(
         SharedPreferencesHelper.keySettingLatitude, location.latitude);
+  }
+
+  Future<void> _setDebugSetting(bool state) async {
+    await prefs.setBool(SharedPreferencesHelper.keySettingDebug, state);
   }
 }
