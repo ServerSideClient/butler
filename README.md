@@ -1,16 +1,14 @@
-# butler
+# Butler
 
-A new Flutter project.
+Meet your new mobile voice assistant. No prompts are stored or processed outside the confines of your phone.
 
-## Getting Started
+## Capabilities
 
-This project is a starting point for a Flutter application.
+- Provide a weather forecast over two days
+- Set an alarm (In progress)
 
-A few resources to get you started if this is your first Flutter project:
+## Permissions
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Microphone: Goes without saying, doesn't it?
+- Network: Needed to verify the license for picovoice's speech-to-text engine and to contact.
+- Sensors: Optionally enabled to detect changes in the phones orientation e.g. landscape or portrait.
